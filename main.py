@@ -74,14 +74,22 @@ def encode(path_to_base_img):
     print(' Intensity | Frequency | Code    ')
     print('- - - - - -|- - - - - -|- - - - - - - -')
     min, max = 9999, 0
+    freq_len = freq.__len__()
+    start = 9   # Print first 9 frequency
+    last = 4    # Print last 4 frequency
+    index = 0
     for (stash, frequency) in freq:
-        print(' %9r | %-9s | %s' % (stash, frequency, huffmanCode[stash]))
+        if index < start or index > freq_len - last:
+            print(' %9r | %-9s | %s' % (stash, frequency, huffmanCode[stash]))
+        elif index == freq_len - last - 1:
+            print('       ... | ...       | ...')
+        index += 1
         if stash < min:
             min = stash
         if stash > max:
             max = stash
 
-    print("\n Minimum and Maximum Color Intensities: (" + str(min) + ", " + str(max) + ")")
+    # print("\n Minimum and Maximum Color Intensities: (" + str(min) + ", " + str(max) + ")")
 
     # Encode the image
     encoded_str = ""
@@ -92,7 +100,7 @@ def encode(path_to_base_img):
             for rgb in range(3):
                 encoded_str += huffmanCode[pixel[rgb]]
 
-    print(" Number of bits in the encoded bit stream:", len(encoded_str))
+    # print(" Number of bits in the encoded bit stream:", len(encoded_str))
     # print(" Bit stream:", encoded_str)
 
     return encoded_str, huffmanCode
@@ -182,7 +190,7 @@ if __name__ == '__main__':
 
     # Get the image sizes
     width, height = img.size
-    print(' Image size: %3s x %-3s \n' % (str(width), str(height)))
+    print('\n Image size: %3s x %-3s \n' % (str(width), str(height)))
 
     # Encode as huffman
     encoded_img, encoded_img_path = encode(img_path)
@@ -197,7 +205,7 @@ if __name__ == '__main__':
 
     # Compare the original image with the decoded image
     print("\nAnalysis of Huffman Encoding:")
-    print("     Number of bits in the encoded bit stream: ", len(encoded_img))
     print("     Number of bits in the original bit stream:", width * height * 3 * 8)
+    print("     Number of bits in the encoded bit stream: ", len(encoded_img))
     print("     Compression ratio:", (width * height * 3 * 8) / len(encoded_img))
     print("     Different pixels: ", count_different_pixels(img_path, path_to_save))
