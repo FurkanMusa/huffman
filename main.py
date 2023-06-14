@@ -105,17 +105,19 @@ def decode(encoded_str, huffmanCode, width, height):
 
     # Decode the image
     stash_of_stashes = []
-    while encoded_str.__len__() != 0:
+    starting_index = 0
+    while starting_index < encoded_str.__len__():
         flag = True
         key = ''
-        # print(encoded_str.__len__())
+        index = 0
         while flag:
-            key = key + encoded_str[0]
-            encoded_str = encoded_str[1:]
+            key = key + encoded_str[starting_index + index]
+            index += 1
             if key in huffmanCode:
+                starting_index += index
                 flag = False
                 stash_of_stashes.append(huffmanCode[key])
-                # print("%10r : %r " % (key, get_key_from_value(huffmanCode, key)))
+                # print("%10s : %r " % (key, huffmanCode[key]))
 
     # print("Length of stash_of_stashes: " + str(stash_of_stashes.__len__()))
     # print("stash_of_stashes: " + str(stash_of_stashes))
@@ -191,7 +193,7 @@ if __name__ == '__main__':
     # Save the decoded image
     path_to_save = img_path.split('.')[0] + "_regenerated." + img_path.split('.')[-1]
     img_decoded.save(path_to_save)
-    print("\nRegenerated image saved as \"" + path_to_save + "\"")
+    print("\n Regenerated image saved as \"" + path_to_save + "\"")
 
     # Compare the original image with the decoded image
     print("\nAnalysis of Huffman Encoding:")
